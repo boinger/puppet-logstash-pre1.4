@@ -28,12 +28,12 @@
 # * Add better support for other ways providing the jar file?
 #
 class logstash::package(
-  $logstash_home = '/opt/logstash',
-  $logstash_version = $logstash::config::logstash_version,
+  $logstash_home     = '/opt/logstash',
+  $logstash_version  = $logstash::config::logstash_version,
   $logstash_provider = 'http',
-  $logstash_baseurl = 'https://logstash.objects.dreamhost.com/release',
-  $java_provider = 'external',
-  $java_package = 'java-1.7.0-openjdk' )
+  $logstash_baseurl  = 'https://logstash.objects.dreamhost.com/release',
+  $java_provider     = 'external',
+  $java_package      = 'java-1.7.0-openjdk' )
 {
 
   # naughtly, the logstash::config class creates the $logstash_home directory,
@@ -61,7 +61,7 @@ class logstash::package(
   if $logstash_provider == 'puppet' {
     file { "$logstash_home/$logstash_jar":
       ensure => present,
-      source => "puppet:///modules/logstash/$logstash_jar",
+      source => "puppet:///modules/logstash/$logstash_jar";
     }
   }
 
@@ -76,7 +76,7 @@ class logstash::package(
       cwd     => "/tmp",
       creates => "$logstash_home/$logstash_jar",
       path    => ["/usr/bin", "/usr/sbin"],
-      require => Package['curl'],
+      require => Package['curl'];
     }
   }
 

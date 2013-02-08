@@ -25,20 +25,20 @@ class logstash::server (
   $jarname ='logstash-1.1.9-monolithic.jar'
 ) {
 
-  file { '/etc/rc.d/init.d/logstash-server':
-    ensure => 'file',
-    group  => '0',
-    mode   => '0755',
-    owner  => '0',
-    source => 'puppet:///modules/logstash/logstash-server' ;
-  }
+  file {
+    '/etc/rc.d/init.d/logstash-server':
+      ensure => 'file',
+      group  => '0',
+      mode   => '0755',
+      owner  => '0',
+      source => 'puppet:///modules/logstash/logstash-server';
 
-  file { '/opt/logstash/conf/server-wrapper.conf':
-    ensure   => 'file',
-    group    => '0',
-    mode     => '0644',
-    owner    => '0',
-    content  => template('logstash/server-wrapper.conf.erb');
+    '/opt/logstash/conf/server-wrapper.conf':
+      ensure   => 'file',
+      group    => '0',
+      mode     => '0644',
+      owner    => '0',
+      content  => template('logstash/server-wrapper.conf.erb');
   }
 
   service { 'logstash-server':
