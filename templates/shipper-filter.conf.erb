@@ -45,7 +45,7 @@ filter {
   # so force the source_host to fqdn for this host
   mutate {
     type => "apache-error"
-    replace => [ "@source_host", "<%=fqdn%>" ]
+    replace => [ "@source_host", "<%= @fqdn %>" ]
   }
 
 }

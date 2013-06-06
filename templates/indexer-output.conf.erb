@@ -10,7 +10,7 @@ output {
 <% if scope.lookupvar('logstash::config::elasticsearch_provider') == 'embedded' %>
     embedded => true 
 <% else %>
-    host => "<%=scope.lookupvar('logstash::config::elasticsearch_host')%>"
+    host => "<%= scope.lookupvar('logstash::config::elasticsearch_host') %>"
 <% end %>
   }
 }

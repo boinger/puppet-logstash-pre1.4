@@ -2,7 +2,7 @@ input {
   file {
     type => "syslog"
     # Wildcards work here :)
-    path => [ <%= params['logfiles'] %> ]
+    path => [ <%= @params['logfiles'] %> ]
   }
 }
 
@@ -21,7 +21,7 @@ output {
   stdout { }
   # Ship events to the amqp fanout queue named 'rawlogs"
   amqp {
-    host          => "<%= logstash_server %>"
+    host          => "<%= @logstash_server %>"
     exchange_type => "fanout"
     name          => "rawlogs"
     }

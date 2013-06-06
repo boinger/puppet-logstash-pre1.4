@@ -1,5 +1,5 @@
 amqp {
-  host          => "<%= logstash_server %>"
+  host          => "<%= @logstash_server %>"
   exchange_type => "fanout"
   name          => "rawlogs"
 }
