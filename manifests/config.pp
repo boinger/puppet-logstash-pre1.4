@@ -63,7 +63,7 @@ class logstash::config(
 
     "$logstash_log":
       ensure  => 'directory',
-      mode    => 0644,
+      mode    => 0664,
       recurse => true;
   }
 
