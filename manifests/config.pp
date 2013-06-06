@@ -24,7 +24,7 @@ class logstash::config(
   $logstash_log           = '/var/log/logstash',
   $logstash_transport     = 'redis',
   $logstash_jar_provider  = 'package',
-  $logstash_version       = '1.1.9',
+  $logstash_version       = '1.1.13',
   $logstash_verbose       = 'yes',
   $logstash_user          = 'logstash',
   $logstash_group         = 'logstash',

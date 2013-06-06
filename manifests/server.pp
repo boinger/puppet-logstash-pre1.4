@@ -22,7 +22,7 @@
 #
 class logstash::server (
   $verbose = 'no',
-  $jarname ='logstash-1.1.9-monolithic.jar'
+  $jarname ='logstash-1.1.13-monolithic.jar'
 ) {
 
   file {
