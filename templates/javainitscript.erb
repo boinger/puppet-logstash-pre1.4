@@ -3,7 +3,7 @@
 # chkconfig: 345 99 05
 # description: Java daemon script
 #
-# A non-SUSE Linux start/stop script for Java daemons.
+# A non-SUSE Linux start/stop script for Java daemons
 # http://shrubbery.mynetgear.net/c/display/W/Java+Daemon+Startup+Script
 #
 # Derived from -
@@ -12,6 +12,7 @@
 # Copyright 2006 Christian d'Heureuse, Inventec Informatik AG, Switzerland.
 #
 # History:
+# 2013-06-06 Jeff Vier: Added orphaned daemon handling
 # 2010-09-21 Josh Davis: Changed 'sudo' to 'su', fix some typos, removed unused variables
 # 2009-03-04 Josh Davis: Ubuntu/Redhat version.
 # 2006-06-27 Christian d'Heureuse: Script created.
@@ -19,7 +20,7 @@
 # 2006-07-10 chdh: Changes for SUSE 10.0.
  
 # Set this to your Logstash home
- export HOME="<%= @servicehome %>"
+export HOME="<%= @servicehome %>"
  
 # Set this to your Java installation
 JAVA_HOME=<%= @java_home %>

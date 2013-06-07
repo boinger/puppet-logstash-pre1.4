@@ -54,6 +54,7 @@ class logstash::shipper (
     servicejar     => $logstash::package::jar,
     serviceargs    => " agent -f /etc/logstash/shipper.conf -l $logstash::config::logstash_log/shipper.log",
     java_home      => $logstash::config::java_home,
+    notify         => Service['logstash-shipper'];
   }
 
   # directory of grok patterns
