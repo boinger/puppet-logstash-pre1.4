@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # chkconfig: 345 99 05
-# description: Java deamon script
+# description: Java daemon script
 #
 # A non-SUSE Linux start/stop script for Java daemons.
 # http://shrubbery.mynetgear.net/c/display/W/Java+Daemon+Startup+Script
@@ -37,7 +37,7 @@ javaCommand="java"                                   # name of the Java launcher
 javaExe="$JAVA_HOME/bin/$javaCommand"                # file name of the Java application launcher executable
 javaArgs="-jar <%= @servicejar %> <%= @serviceargs %>"      # arguments for Java launcher
 javaCommandLine="$javaExe $javaArgs"                 # command line to start the Java service application
-javaCommandLineKeyword="<%= @servicejar %>"             # a keyword that occurs on the commandline, used to detect an already 
+javaCommandLineKeyword="<%= @servicehome %>/logstash-"             # a keyword that occurs on the commandline, used to detect an already 
 						     # running service process and to distinguish it from others
 
  
@@ -52,16 +52,21 @@ function makeFileWritable {
 # Returns 0 if the process with PID $1 is running.
 function checkProcessIsRunning {
    local pid="$1"
-   if [ -z "$pid" -o "$pid" == " " ]; then return 1; fi
-   if [ ! -e /proc/$pid ]; then return 1; fi
+   if [ -z "$pid" -o "$pid" == " " ] && [ ! $(pgrep -f "$javaCommandLineKeyword") ]; then return 1; fi
+   if [ ! -e /proc/$pid ] && [ ! $(pgrep -f "$javaCommandLineKeyword") ]; then return 1; fi
    return 0; }
  
 # Returns 0 if the process with PID $1 is our Java service process.
 function checkProcessIsOurService {
    local pid="$1"
-   if [ "$(ps -p $pid --no-headers -o comm)" != "$javaCommand" ]; then return 1; fi
-   grep -q --binary -F "$javaCommandLineKeyword" /proc/$pid/cmdline
+   if [ "$(ps -p $pid --no-headers -o comm)" != "$javaCommand" ] && [ ! $(pgrep -f "$javaCommandLineKeyword") ]; then return 1; fi
+   [ -f /proc/$pid/cmdline ] && grep -q --binary -F "$javaCommandLineKeyword" /proc/$pid/cmdline
    if [ $? -ne 0 ]; then return 1; fi
+   return 0; }
+ 
+# Returns 0 if no process is found with our (theoretically unique) keyword
+function checkIfOrphaned {
+   [ $(pgrep -f "$javaCommandLineKeyword") ] || return 2
    return 0; }
  
 # Returns 0 when the service is running and sets the variable $pid to the PID.
@@ -98,7 +103,7 @@ function stopServiceProcess {
       sleep 0.1
       done
    echo -e "\n$serviceName did not terminate within $maxShutdownTime seconds, sending SIGKILL..."
-   kill -s KILL $pid || return 1
+   kill -s KILL $pid || pkill -f "$javaCommandLineKeyword" || return 1
    local killWaitTime=15
    for ((i=0; i<killWaitTime*10; i++)); do
       checkProcessIsRunning $pid
@@ -113,7 +118,9 @@ function stopServiceProcess {
  
 function startService {
    getServicePID
-   if [ $? -eq 0 ]; then echo -n "$serviceName is already running"; RETVAL=0; return 0; fi
+   if [ $? -eq 0 ]; then echo -n "$serviceName is already running"; RETVAL=1; return 1; fi
+   checkIfOrphaned
+   if [ $? -eq 0 ]; then echo -n "$serviceName is already running (but is Orphaned)."; RETVAL=2; return 2; fi
    echo -n "Starting $serviceName   "
    startServiceProcess
    if [ $? -ne 0 ]; then RETVAL=1; echo "failed"; return 1; fi
@@ -122,22 +129,33 @@ function startService {
    return 0; }
  
 function stopService {
-   getServicePID
-   if [ $? -ne 0 ]; then echo -n "$serviceName is not running"; RETVAL=0; echo ""; return 0; fi
-   echo -n "Stopping $serviceName   "
-   stopServiceProcess
-   if [ $? -ne 0 ]; then RETVAL=1; echo "failed"; return 1; fi
-   echo "stopped PID=$pid"
-   RETVAL=0
-   return 0; }
+   if [ getServicePID ] && [ ! checkIfOrphaned ]; then echo -n "$serviceName is not running"; RETVAL=0; echo ""; return 0; fi
+   if [ checkIfOrphaned ]; then
+      echo "$serviceName appears to be orphaned";
+      echo -n "Killing orphaned $serviceName   "
+      pid=$(pgrep -f "$javaCommandLineKeyword")
+      stopServiceProcess
+   else
+      echo -n "Stopping $serviceName   "
+      stopServiceProcess
+      if [ $? -ne 0 ]; then RETVAL=1; echo "failed"; return 1; fi
+      echo "stopped PID=$pid"
+      RETVAL=0
+      return 0;
+   fi
+   }
  
 function checkServiceStatus {
    echo -n "Checking for $serviceName:   "
    if getServicePID; then
-    echo "running PID=$pid"
+    echo "Running PID=$pid"
     RETVAL=0
+   elif checkIfOrphaned; then
+    echo "Orphaned PID(s):"
+    pgrep -f "$javaCommandLineKeyword"
+    RETVAL=2
    else
-    echo "stopped"
+    echo "Stopped"
     RETVAL=3
    fi
    return 0; }
