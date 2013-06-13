@@ -62,6 +62,7 @@ class logstash::indexer (
     servicejar     => $logstash::package::jar,
     serviceargs    => " agent -f ${logstash::config::logstash_etc}/indexer.conf -l ${logstash::config::logstash_log}/indexer.log",
     java_home      => $logstash::config::java_home,
+    keyword        => 'logstash/indexer';
   }
 
   service { 'logstash-indexer':

@@ -38,7 +38,7 @@ javaCommand="java"                                   # name of the Java launcher
 javaExe="$JAVA_HOME/bin/$javaCommand"                # file name of the Java application launcher executable
 javaArgs="-jar <%= @servicejar %> <%= @serviceargs %>"      # arguments for Java launcher
 javaCommandLine="$javaExe $javaArgs"                 # command line to start the Java service application
-javaCommandLineKeyword="<%= @servicehome %>/<%= @servicename %>"             # a keyword that occurs on the commandline, used to detect an already 
+javaCommandLineKeyword="<%= @keyword %>"             # a keyword that occurs on the commandline, used to detect an already 
 						     # running service process and to distinguish it from others
 
  
