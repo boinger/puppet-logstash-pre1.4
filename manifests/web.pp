@@ -36,7 +36,7 @@ class logstash::web (
     servicehome    => $logstash::config::logstash_home,
     servicelogfile => "$logstash::config::logstash_log/web.log",
     servicejar     => $logstash::package::jar,
-    serviceargs    => " web --backend elasticsearch:///?local -l $logstash::config::logstash_log/web.log",
+    serviceargs    => " web --backend elasticsearch://127.0.0.1:9300/ -l $logstash::config::logstash_log/web.log",
     keyword        => 'logstash/web',
     java_home      => $logstash::config::java_home,
   }
