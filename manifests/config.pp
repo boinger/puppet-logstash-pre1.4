@@ -56,6 +56,8 @@ class logstash::config(
 
     "${logstash_home}/data":
       ensure  => 'directory',
+      owner   => $logstash_user,
+      group   => $logstash_group,
       require => File[$logstash_home];
 
     "${logstash_home}/lib":
