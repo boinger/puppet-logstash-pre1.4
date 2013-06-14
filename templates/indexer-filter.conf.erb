@@ -32,12 +32,17 @@ filter {
     # named 'timestamp' that is set to the normal syslog timestamp if it
     # exists in the event.
 
-    match => [ "timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-    match => [ "timestamp8601", "ISO8601" ] # Some syslogs use ISO8601 time format
+    #timestamp => "MMM  d HH:mm:ss"   # syslog 'day' value can be space-leading
+    #timestamp => "MMM dd HH:mm:ss"
+    #timestamp8601 => ISO8601 # Some syslogs use ISO8601 time format
+
+    match => [ "logdate", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "ISO8601" ]
 
   }
   date {
     type	=> "apache-access"
-    match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+    #timestamp => "dd/MMM/yyyy:HH:mm:ss Z"
+    match => [ "logdate", "dd/MMM/yyyy:HH:mm:ss Z" ]
+
   }
 }
