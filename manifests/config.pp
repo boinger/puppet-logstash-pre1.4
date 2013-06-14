@@ -50,11 +50,15 @@ class logstash::config(
     "$logstash_home":
       ensure => 'directory';
 
-    "${logstash_home}/bin/":
+    "${logstash_home}/bin":
       ensure  => 'directory',
       require => File[$logstash_home];
 
-    "${logstash_home}/lib/":
+    "${logstash_home}/data":
+      ensure  => 'directory',
+      require => File[$logstash_home];
+
+    "${logstash_home}/lib":
       ensure  => 'directory',
       require => File[$logstash_home];
 
