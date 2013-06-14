@@ -83,5 +83,11 @@ class logstash::indexer (
       require => File["${logstash::config::logstash_home}/data"],
     }
   }
+
+  file { "${logstash::config::logstash_home}/data":
+    ensure => directory,
+    owner  => $logstash::config::logstash_user,
+    group  => $logstash::config::logstash_group,
+  }
 }
 
