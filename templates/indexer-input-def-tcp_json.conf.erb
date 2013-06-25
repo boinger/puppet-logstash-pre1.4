@@ -1,6 +1,6 @@
   tcp {
     format => "json"
     charset => "UTF-8"
-    port => <%= @tcp_port %>
+    port => <%= scope.lookupvar('logstash::config::tcp_port')%>
     type => "eventlog"
   }
