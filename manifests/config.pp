@@ -36,6 +36,7 @@ class logstash::config(
   $redis_host             = '127.0.0.1',
   $redis_port             = '6379',
   $redis_key              = 'logstash',
+  $tcp_port               = '12346',
   $java_provider          = 'package',
   $java_package           = 'java-1.7.0-openjdk',
   $java_home              = '/usr/lib/jvm/jre-1.7.0-openjdk.x86_64'
