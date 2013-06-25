@@ -19,6 +19,7 @@
 # * Update documentation
 #
 class logstash::indexer (
+  $tcp_port  = $logstash::config::tcp_port,
 ) {
 
   # make sure the logstash::config class is declared before logstash::indexer
