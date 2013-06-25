@@ -34,21 +34,31 @@ class logstash::indexer (
   # create the config file based on the transport we are using
   # (this could also be extended to use different configs)
   case  $logstash::config::logstash_transport {
-    /^redis$/: { $indexer_conf_content = template('logstash/indexer-input-redis.conf.erb',
-                                                  'logstash/indexer-filter.conf.erb',
-                                                  'logstash/indexer-output.conf.erb') }
-    /^amqp$/:  { $indexer_conf_content = template('logstash/indexer-input-amqp.conf.erb',
-                                                  'logstash/indexer-filter.conf.erb',
-                                                  'logstash/indexer-output.conf.erb') }
-    default:   { $indexer_conf_content = template('logstash/indexer-input-amqp.conf.erb',
-                                                  'logstash/indexer-filter.conf.erb',
-                                                  'logstash/indexer-output.conf.erb') }
+    /^redis$/: { $indexer_conf_content = template(
+                                            'logstash/indexer-input-header.conf.erb',
+                                            'logstash/indexer-input-def-redis.conf.erb',
+                                            'logstash/indexer-input-def-tcp_json.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb',
+                                            'logstash/indexer-filter.conf.erb',
+                                            'logstash/indexer-output.conf.erb') }
+    /^amqp$/:  { $indexer_conf_content = template(
+                                            'logstash/indexer-input-header.conf.erb',
+                                            'logstash/indexer-input-def-amqp.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb',
+                                            'logstash/indexer-filter.conf.erb',
+                                            'logstash/indexer-output.conf.erb') }
+    default:   { $indexer_conf_content = template(
+                                            'logstash/indexer-input-header.conf.erb',
+                                            'logstash/indexer-input-def-amqp.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb',
+                                            'logstash/indexer-filter.conf.erb',
+                                            'logstash/indexer-output.conf.erb') }
   }
 
   file { "${logstash::config::logstash_etc}/indexer.conf":
-    ensure  => 'file',
+    ensure  => file,
+    mode    => 0644,
     group   => '0',
-    mode    => '0644',
     owner   => '0',
     content => $indexer_conf_content,
     notify  => [
