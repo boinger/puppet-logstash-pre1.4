@@ -3,7 +3,7 @@
     charset    => "UTF-8"
     port       => <%= scope.lookupvar('logstash::config::tcp_port')%>
     type       => "eventlog"
-    ssl_enable => 1
+    ssl_enable => true
     ssl_cacert => "/etc/ssl/certs/rapidssl_intermediate.pem"
     ssl_cert   => "/etc/ssl/certs/wildcard.icix.com.crt"
     ssl_key    => "/etc/ssl/certs/wildcard.icix.com.key"
