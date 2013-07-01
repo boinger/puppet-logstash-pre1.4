@@ -1,0 +1,8 @@
+  lumberjack {
+    charset         => "UTF-8"
+    format          => "json"
+    port            => <%= scope.lookupvar('logstash::config::lumberjack_port')%>
+    type            => "lumberjack"
+    ssl_certificate => "/etc/ssl/certs/logstash.crt"
+    ssl_key         => "/etc/ssl/certs/logstash.key"
+  }
