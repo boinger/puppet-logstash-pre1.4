@@ -38,8 +38,7 @@ javaCommand="java"                                   # name of the Java launcher
 javaExe="$JAVA_HOME/bin/$javaCommand"                # file name of the Java application launcher executable
 javaArgs="-jar <%= @servicejar %> <%= @serviceargs %>"      # arguments for Java launcher
 javaCommandLine="$javaExe $javaArgs"                 # command line to start the Java service application
-javaCommandLineKeyword="<%= @keyword %>"             # a keyword that occurs on the commandline, used to detect an already 
-						     # running service process and to distinguish it from others
+javaCommandLineKeyword="<%= @keyword %>"             # a distinguishing keyword that occurs on the commandline, used to detect an orphaned process
 
  
 # Makes the file $1 writable by the group $serviceGroup.
@@ -67,7 +66,8 @@ function checkProcessIsOurService {
  
 # Returns 0 if no process is found with our (theoretically unique) keyword
 function checkIfOrphaned {
-   [ $(pgrep -f "$javaCommandLineKeyword") ] || return 2
+   pid="$(pgrep -f "$javaCommandLineKeyword")"
+   [ -z "$pid" ] || return 2
    return 0; }
  
 # Returns 0 when the service is running and sets the variable $pid to the PID.
@@ -119,9 +119,18 @@ function stopServiceProcess {
  
 function startService {
    getServicePID
-   if [ $? -eq 0 ]; then echo -n "$serviceName is already running"; RETVAL=1; return 1; fi
-   checkIfOrphaned
-   if [ $? -eq 0 ]; then echo -n "$serviceName is already running (but is Orphaned)."; RETVAL=2; return 2; fi
+   if [ $? -eq 0 ]; then
+      echo -n "$serviceName is already running"
+      RETVAL=1
+      return 1
+   else
+      checkIfOrphaned
+      if [ $? -ne 0 ]; then
+         echo -n "$serviceName is already running (but is Orphaned)."
+         RETVAL=2
+         return 2
+      fi
+   fi
    echo -n "Starting $serviceName   "
    startServiceProcess
    if [ $? -ne 0 ]; then RETVAL=1; echo "failed"; return 1; fi
@@ -130,20 +139,22 @@ function startService {
    return 0; }
  
 function stopService {
-   if [ getServicePID ] && [ ! checkIfOrphaned ]; then echo -n "$serviceName is not running"; RETVAL=0; echo ""; return 0; fi
-   if [ checkIfOrphaned ]; then
-      echo "$serviceName appears to be orphaned";
-      echo -n "Killing orphaned $serviceName   "
-      pid=$(pgrep -f "$javaCommandLineKeyword")
-      stopServiceProcess
-   else
-      echo -n "Stopping $serviceName   "
-      stopServiceProcess
-      if [ $? -ne 0 ]; then RETVAL=1; echo "failed"; return 1; fi
-      echo "stopped PID=$pid"
-      RETVAL=0
-      return 0;
+   getServicePID
+   if [ $? -ne 0 ]; then
+      echo "$serviceName does not appear to be running as the expected PID"
+      checkIfOrphaned
+      if [ $? -ne 0 ]; then 
+         echo "$serviceName appears to be orphaned [PID $pid]";
+      fi
+      return 1
    fi
+
+   echo -n "Stopping $serviceName   "
+   stopServiceProcess
+   if [ $? -ne 0 ]; then RETVAL=1; echo "failed"; return 1; fi
+   echo "stopped PID=$pid"
+   RETVAL=0
+   return 0
    }
  
 function checkServiceStatus {
@@ -171,7 +182,7 @@ function main {
          stopService
          ;;
       restart)                                             # stops and restarts the service
-         stopService && startService
+         stopService ; startService
          ;;
       status)                                              # displays the service status
          checkServiceStatus
