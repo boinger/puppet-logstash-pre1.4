@@ -34,11 +34,11 @@ class logstash::server (
       source => 'puppet:///modules/logstash/logstash-server';
 
     '/opt/logstash/conf/server-wrapper.conf':
-      ensure   => 'file',
-      group    => '0',
-      mode     => '0644',
-      owner    => '0',
-      content  => template('logstash/server-wrapper.conf.erb');
+      ensure  => 'file',
+      group   => '0',
+      mode    => '0644',
+      owner   => '0',
+      content => template('logstash/server-wrapper.conf.erb');
   }
 
   service { 'logstash-server':
