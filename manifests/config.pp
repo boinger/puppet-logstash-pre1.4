@@ -69,7 +69,7 @@ class logstash::config(
       group   => $group,
       mode    => 0664,
       recurse => true,
-      require => [ Class['logstash::user'], User[$logstash::config::user], ];
+      require => Class['logstash::user'];
   }
 
   # make sure we have a logstash jar (& dependencies, if we want)
