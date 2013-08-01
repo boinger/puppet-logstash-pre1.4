@@ -38,6 +38,7 @@ class logstash::indexer (
                                             'logstash/indexer-input-header.conf.erb',
                                             'logstash/indexer-input-def-lumberjack.conf.erb',
                                             'logstash/indexer-input-def-redis.conf.erb',
+                                            'logstash/indexer-input-def-syslog.conf.erb',
                                             'logstash/indexer-input-def-tcp_json.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
