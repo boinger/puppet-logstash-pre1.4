@@ -13,10 +13,10 @@ Declare a config class that is used by the working classes:
 ```puppet
   # this example is enough for CentOS 5
   class { 'logstash::config':
-    logstash_home => '/opt/logstash',
-    logstash_jar_provider => 'http',
-    logstash_transport => 'redis',
-    redis_provider     => 'package',
+    logstash_home          => '/opt/logstash',
+    logstash_jar_provider  => 'http',
+    logstash_transport     => 'redis',
+    redis_provider         => 'package',
     elasticsearch_provider => 'embedded',
   }
   # there is a redis RPM here:
