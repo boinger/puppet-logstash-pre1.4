@@ -14,9 +14,8 @@ filter {
   grep {
     negate => true
     type   => syslog
-    match  => [ "@source_path", "/var/log/messages", "@message", "dhclient", ]
+    match  => [ "@source_path", "/var/log/messages", "@message", "dhclient" ]
   }
-
   grok {
     patterns_dir         => [ "/etc/logstash/grok_patterns" ]
     type                 => "syslog"
