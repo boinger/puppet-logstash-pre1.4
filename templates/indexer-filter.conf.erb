@@ -13,8 +13,10 @@ filter {
  # } 
   grep {
     negate => true
-    match  => [ "DHCP", ]
+    type   => syslog
+    match  => [ "@source_path", "/var/log/messages", "@message", "dhclient", ]
   }
+
   grok {
     patterns_dir         => [ "/etc/logstash/grok_patterns" ]
     type                 => "syslog"
