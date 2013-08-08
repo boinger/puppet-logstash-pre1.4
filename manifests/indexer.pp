@@ -71,7 +71,7 @@ class logstash::indexer (
 
   # startup script
   logstash::javainitscript { 'logstash-indexer':
-    serviceuser    => $logstash::config::user,
+    serviceuser    => root,
     servicegroup   => $logstash::config::group,
     servicehome    => $logstash::config::logstash_home,
     servicelogfile => "${logstash::config::logstash_log}/indexer.log",
