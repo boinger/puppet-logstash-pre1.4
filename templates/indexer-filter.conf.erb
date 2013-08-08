@@ -13,15 +13,16 @@ filter {
  # } 
   grep {
     negate => true
-    type   => syslog
+    type   => "syslog"
     match  => [ "@source_path", "/var/log/messages", "@message", "dhclient" ]
   }
+
   grok {
-    patterns_dir         => [ "/etc/logstash/grok_patterns" ]
-    type                 => "syslog"
-    pattern              => "%{SYSLOGLINE}"
-    break_on_match       => true
-    #named_captures_only => true
+    patterns_dir        => [ "/etc/logstash/grok_patterns" ]
+    type                => "syslog"
+    pattern             => "%{SYSLOGLINE}"
+    break_on_match      => true
+    named_captures_only => true
   }
   grok {
     patterns_dir        => [ "/etc/logstash/grok_patterns" ]
