@@ -22,7 +22,7 @@ filter {
     type                => "syslog"
     pattern             => "%{SYSLOGLINE}"
     break_on_match      => true
-    named_captures_only => true
+    #named_captures_only => true
   }
   grok {
     patterns_dir        => [ "/etc/logstash/grok_patterns" ]
