@@ -24,6 +24,8 @@ export HOME="<%= @servicehome %>"
  
 # Set this to your Java installation
 JAVA_HOME=<%= @java_home %>
+JAVA_MEM_MIN=<%= @java_mem_min %>
+JAVA_MEM_MAX=<%= @java_mem_max %>
  
 serviceNameLo="<%= @servicename.downcase %>"	     # service name with the first letter in lowercase
 serviceName="<%= @servicename %>"                     # service name
@@ -36,7 +38,7 @@ maxShutdownTime=15                                   # maximum number of seconds
 pidFile="/var/run/<%= @servicename.downcase %>.pid"     # name of PID file (PID = process ID number)
 javaCommand="java"                                   # name of the Java launcher without the path
 javaExe="$JAVA_HOME/bin/$javaCommand"                # file name of the Java application launcher executable
-javaArgs="-jar <%= @servicejar %> <%= @serviceargs %>"      # arguments for Java launcher
+javaArgs="-Xmx$JAVA_MEM_MAX -Xms$JAVA_MEM_MIN -jar <%= @servicejar %> <%= @serviceargs %>"      # arguments for Java launcher
 javaCommandLine="$javaExe $javaArgs"                 # command line to start the Java service application
 javaCommandLineKeyword="<%= @keyword %>"             # a distinguishing keyword that occurs on the commandline, used to detect an orphaned process
 
