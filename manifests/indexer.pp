@@ -80,7 +80,6 @@ class logstash::indexer (
     java_home      => $logstash::config::java_home,
     java_mem_min   => '2g',
     java_mem_max   => '8g',
-    java_home      => $logstash::config::java_home,
     keyword        => 'logstash/indexer';
   }
 
