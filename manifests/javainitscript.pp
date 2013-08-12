@@ -19,6 +19,7 @@ define logstash::javainitscript (
     owner   => root,
     group   => root,
     mode    => '0755',
-    content => template('logstash/javainitscript.erb')
+    content => template('logstash/javainitscript.erb'),
+    notify  => Service["${servicename}"];
   }
 }
