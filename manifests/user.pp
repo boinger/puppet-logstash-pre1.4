@@ -6,7 +6,7 @@ class logstash::user (
 ) {
 
   # make sure the logstash::config class is declared before logstash::user
-  #Class['logstash::config'] -> Class['logstash::user']
+  Class['logstash::config'] -> Class['logstash::user']
 
   User {
     ensure     => present,
