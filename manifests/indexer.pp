@@ -36,15 +36,10 @@ class logstash::indexer (
   case  $logstash::config::logstash_transport {
     /^redis$/: { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
-                                            'logstash/indexer-input-def-log4j.conf.erb',
-                                            'logstash/indexer-input-def-lumberjack.conf.erb',
                                             'logstash/indexer-input-def-redis.conf.erb',
-                                            'logstash/indexer-input-def-syslog.conf.erb',
-                                            'logstash/indexer-input-def-tcp_json.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
                                             'logstash/indexer-output-header.conf.erb',
-                                            'logstash/indexer-output-es_http.conf.erb',
                                             'logstash/indexer-output-es.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb'
                                             ) }
@@ -53,14 +48,23 @@ class logstash::indexer (
                                             'logstash/indexer-input-def-amqp.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
-                                            'logstash/indexer-output.conf.erb'
+                                            'logstash/indexer-output-header.conf.erb',
+                                            'logstash/indexer-output-es.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb'
                                             ) }
     default:   { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
                                             'logstash/indexer-input-def-amqp.conf.erb',
+                                            'logstash/indexer-input-def-log4j.conf.erb',
+                                            'logstash/indexer-input-def-lumberjack.conf.erb',
+                                            'logstash/indexer-input-def-syslog.conf.erb',
+                                            'logstash/indexer-input-def-tcp_json.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
-                                            'logstash/indexer-output.conf.erb'
+                                            'logstash/indexer-output-header.conf.erb',
+                                            'logstash/indexer-output-es_http.conf.erb',
+                                            'logstash/indexer-output-es.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb'
                                             ) }
   }
 
