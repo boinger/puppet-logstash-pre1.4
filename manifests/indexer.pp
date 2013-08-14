@@ -43,8 +43,10 @@ class logstash::indexer (
                                             'logstash/indexer-input-def-tcp_json.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
+                                            'logstash/indexer-output-header.conf.erb',
                                             'logstash/indexer-output-es_http.conf.erb',
-                                            'logstash/indexer-output-es.conf.erb'
+                                            'logstash/indexer-output-es.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb'
                                             ) }
     /^amqp$/:  { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
