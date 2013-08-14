@@ -43,19 +43,23 @@ class logstash::indexer (
                                             'logstash/indexer-input-def-tcp_json.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
-                                            'logstash/indexer-output.conf.erb') }
+                                            'logstash/indexer-output-es_http.conf.erb',
+                                            'logstash/indexer-output-es.conf.erb'
+                                            ) }
     /^amqp$/:  { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
                                             'logstash/indexer-input-def-amqp.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
-                                            'logstash/indexer-output.conf.erb') }
+                                            'logstash/indexer-output.conf.erb'
+                                            ) }
     default:   { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
                                             'logstash/indexer-input-def-amqp.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
-                                            'logstash/indexer-output.conf.erb') }
+                                            'logstash/indexer-output.conf.erb'
+                                            ) }
   }
 
   file { "${logstash::config::logstash_etc}/indexer.conf":
