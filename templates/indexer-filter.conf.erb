@@ -13,7 +13,6 @@ filter {
  # } 
   grep {
     negate => true
-    #type   => "syslog"
     match  => [ "@source_path", "/var/log/messages", "@message", "dhclient" ]
   }
 
