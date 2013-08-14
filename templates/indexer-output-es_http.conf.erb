@@ -1,0 +1,12 @@
+output {
+  # enable for debug only
+  # stdout { }
+
+  # If your elasticsearch server is discoverable with multicast, use this:
+  #elasticsearch { }
+
+  # If you can't discover using multicast, set the address explicitly
+  elasticsearch_http {
+    host => "<%= scope.lookupvar('logstash::config::elasticsearch_http_host') %>"
+  }
+}
