@@ -87,6 +87,8 @@ class logstash::package(
   # can't do anything without a java runtime, so we might as well
   # have a hook for pulling it in
   if $java_provider == 'package' {
-    package { "$java_package": }
+    if ! defined(Package[$java_package]) {
+      package { "$java_package": }
+    }
   }
 }
