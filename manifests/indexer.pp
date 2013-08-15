@@ -54,7 +54,6 @@ class logstash::indexer (
                                             ) }
     default:   { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
-                                            'logstash/indexer-input-def-amqp.conf.erb',
                                             'logstash/indexer-input-def-log4j.conf.erb',
                                             'logstash/indexer-input-def-lumberjack.conf.erb',
                                             'logstash/indexer-input-def-syslog.conf.erb',
