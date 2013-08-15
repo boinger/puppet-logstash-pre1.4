@@ -30,7 +30,7 @@ class logstash::config(
   $logstash_group          = 'logstash',
   $elasticsearch_provider  = 'external',
   $elasticsearch_host      = '127.0.0.1',
-  $elasticsearch_http_host = 'elasticsearch0.icix.io',
+  $elasticsearch_http_host = 'elasticsearch0',
   $lumberjack_port         = '5005',
   $redis_provider          = 'external',
   $redis_package           = 'redis',
