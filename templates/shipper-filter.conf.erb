@@ -1,9 +1,15 @@
 
 filter {
   multiline {
-    type => "syslog"
+    type    => "syslog"
     pattern => "^\t"
-    what => "previous"
+    what    => "previous"
+  }
+
+  kv {
+    field_split => "^"
+    value_split => ":"
+    type        => "applog"
   }
 
   grok {
@@ -30,20 +36,20 @@ filter {
   #
   # [Fri Nov 23 00:00:39 2012] [error] [client 64.69.12.83] Multiple Include attempts for DatabaseStringsCommon.php
   grok {
-    type => "apache-error"
-    pattern => "%{GENERICAPACHEERROR}"
+    type         => "apache-error"
+    pattern      => "%{GENERICAPACHEERROR}"
     patterns_dir => "/etc/logstash/grok.d"
   }
 
   date {
-    type => "apache-error"
+    type      => "apache-error"
     timestamp => "EEE MMM dd HH:mm:ss yyyy"
   }
 
   # HACK: only allow log replay on the loopback address,
   # so force the source_host to fqdn for this host
   mutate {
-    type => "apache-error"
+    type    => "apache-error"
     replace => [ "@source_host", "<%= @fqdn %>" ]
   }
 
