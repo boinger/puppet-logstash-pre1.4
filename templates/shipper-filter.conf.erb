@@ -6,12 +6,6 @@ filter {
     what    => "previous"
   }
 
-  kv {
-    field_split => "^"
-    value_split => ":"
-    type        => "applog"
-  }
-
   grok {
     type => "apache"
     # See the following URL for a complete list of named patterns

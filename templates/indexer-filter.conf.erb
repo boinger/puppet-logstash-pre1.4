@@ -16,6 +16,12 @@ filter {
     match  => [ "@message", "dhclient" ]
   }
 
+  kv {
+    field_split => "^"
+    value_split => ":"
+    type        => "applog"
+  }
+
   grok {
     patterns_dir        => [ "/etc/logstash/grok_patterns" ]
     type                => "syslog"
