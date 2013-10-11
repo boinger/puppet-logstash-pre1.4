@@ -34,14 +34,14 @@ filter {
     match => ["@source_path", "/var/log/messages"]
     patterns_dir => ["/etc/logstash/grok_patterns"]
     pattern => "%{SYSLOGLINE}"
-    add_field => [ "syslog_timestamp", "%{timestamp}" ]
-    add_field => [ "syslog_timestamp8601", "%{timestamp8601}" ]
-    add_field => [ "syslog_facility", "%{facility}" ]
-    add_field => [ "syslog_priority", "%{priority}" ]
-    add_field => [ "syslog_logsource", "%{logsource}" ]
-    add_field => [ "program", "%{program}" ]
-    add_field => [ "pid", "%{pid}" ]
-    add_tag => ["fake_tag", "%{program}", "%{facility}"]
+    add_field => [ "syslog_timestamp", "%{@timestamp}" ]
+    add_field => [ "syslog_timestamp8601", "%{@timestamp8601}" ]
+    add_field => [ "syslog_facility", "%{@facility}" ]
+    add_field => [ "syslog_priority", "%{@priority}" ]
+    add_field => [ "syslog_logsource", "%{@logsource}" ]
+    add_field => [ "program", "%{@program}" ]
+    add_field => [ "pid", "%{@pid}" ]
+    add_tag => ["fake_tag", "%{@program}", "%{@facility}"]
   }
 
  # grok {
