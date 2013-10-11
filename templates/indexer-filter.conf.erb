@@ -29,13 +29,19 @@ filter {
     value_split => ":"
   }
 
-
+  # SYSLOGBASE2 (?:%{SYSLOGTIMESTAMP:timestamp}|%{TIMESTAMP_ISO8601:timestamp8601}) (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:
   grok {
     match => ["@source_path", "/var/log/messages"]
     patterns_dir => ["/etc/logstash/grok_patterns"]
     pattern => "%{SYSLOGLINE}"
-    add_field => [ "fake_field", "fake_value" ]
-    add_tag => ["fake_tag"]
+    add_field => [ "syslog_timestamp", "%{timestamp}" ]
+    add_field => [ "syslog_timestamp8601", "%{timestamp8601}" ]
+    add_field => [ "syslog_facility", "%{facility}" ]
+    add_field => [ "syslog_priority", "%{priority}" ]
+    add_field => [ "syslog_logsource", "%{logsource}" ]
+    add_field => [ "program", "%{program}" ]
+    add_field => [ "pid", "%{pid}" ]
+    add_tag => ["fake_tag", "%{program}", "%{facility}"]
   }
 
  # grok {
@@ -66,7 +72,7 @@ filter {
   #   match => [ "logdate", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
   # }
   # date {
-  #   type	=> "apache-access"
+  #   type => "apache-access"
   #   match => [ "logdate", "dd/MMM/yyyy:HH:mm:ss Z" ]
   # }
 }
