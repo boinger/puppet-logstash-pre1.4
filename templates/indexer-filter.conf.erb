@@ -29,11 +29,21 @@ filter {
     value_split => ":"
   }
 
+
   grok {
     match => ["@source_path", "/var/log/messages"]
     patterns_dir => ["/etc/logstash/grok_patterns"]
     pattern => "%{SYSLOGLINE}"
+    add_field => [ "fake_field", "fake_value" ]
+    add_tag => ["fake_tag"]
   }
+
+ # grok {
+ #      type => "syslog"
+ #      pattern => [ "<%{POSINT:syslog_pri}>%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" ]
+ #      add_field => [ "received_at", "%{@timestamp}" ]
+ #      add_field => [ "received_from", "%{@source_host}" ]
+ #  }
 
   # grok {
   #   type                => "syslog"
