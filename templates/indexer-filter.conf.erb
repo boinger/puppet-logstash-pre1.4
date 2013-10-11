@@ -1,48 +1,62 @@
 
-# mind that we're now using our own up patterns_dir which is managed by puppet
+# mind that we're now using our own patterns_dir which is managed by puppet
 
 filter {
- #  grok {
- #    patterns_dir	=> [ "/etc/logstash/grok_patterns" ]
- #    match 		=> [ "wtf" ]
- #    type		=> "syslog"
- #    add_tag		=> 'wtf'
- #    add_field		=> [ "wtf", "%{@message}" ]
- #    break_on_match	=> true
- #    named_captures_only => true
- # } 
+
+  # http://logstash.net/docs/1.1.13/filters/grok
+  # grok {
+  #    type              => "syslog"
+  #    match             => [ "wtf" ]
+  #    patterns_dir      => [ "/etc/logstash/grok_patterns" ]
+  #    pattern           => ??????
+  #    add_tag           => 'wtf'
+  #    add_field         => [ "wtf", "%{@message}" ]
+  #    break_on_match    => true
+  #    named_captures_only => true
+  # }
+
+  # grep notes?
+  # kv notes?
+
   grep {
-    negate => true
     match  => [ "@message", "dhclient" ]
+    negate => true
   }
 
   kv {
+    type        => "applog"
     field_split => "^"
     value_split => ":"
-    type        => "applog"
   }
 
   grok {
-    patterns_dir        => [ "/etc/logstash/grok_patterns" ]
-    type                => "syslog"
-    pattern             => "%{SYSLOGLINE}"
-    break_on_match      => true
-    #named_captures_only => true
-  }
-  grok {
-    patterns_dir        => [ "/etc/logstash/grok_patterns" ]
-    type                => "apache-access"
-    pattern             => "%{COMBINEDAPACHELOG}"
-    break_on_match      => true
-    named_captures_only => true
+    match => ["@source_path", "/var/log/messages"]
+    patterns_dir => ["/etc/logstash/grok_patterns"]
+    pattern => "%{SYSLOGLINE}"
   }
 
-  date {
-    type => "syslog"
-    match => [ "logdate", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
-  }
-  date {
-    type	=> "apache-access"
-    match => [ "logdate", "dd/MMM/yyyy:HH:mm:ss Z" ]
-  }
+  # grok {
+  #   type                => "syslog"
+  #   patterns_dir        => [ "/etc/logstash/grok_patterns" ]
+  #   pattern             => "%{SYSLOGLINE}"
+  #   break_on_match      => true
+  #   #named_captures_only => true
+  # }
+
+  # grok {
+  #   type                => "apache-access"
+  #   patterns_dir        => [ "/etc/logstash/grok_patterns" ]
+  #   pattern             => "%{COMBINEDAPACHELOG}"
+  #   break_on_match      => true
+  #   named_captures_only => true
+  # }
+
+  # date {
+  #   type => "syslog"
+  #   match => [ "logdate", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
+  # }
+  # date {
+  #   type	=> "apache-access"
+  #   match => [ "logdate", "dd/MMM/yyyy:HH:mm:ss Z" ]
+  # }
 }
