@@ -42,7 +42,7 @@ filter {
   grok {
     match => ["@source_path", "/var/log/messages"]
     patterns_dir => ["/etc/logstash/grok_patterns"]
-    pattern => "^%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"
+    pattern => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"
     # add_field => [ "syslog_timestamp", "%{@syslog_timestamp}" ]
     # add_field => [ "syslog_host", "%{@syslog_host}" ]
     # add_field => [ "program", "%{@program}" ]
