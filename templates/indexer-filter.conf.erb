@@ -68,6 +68,7 @@ filter {
   mutate {
     tags => ['messages']
     replace => [ "@message", "%{short_message}" ]
+    remove => [ 'syslog_ts', 'syslog_host', 'short_message' ]
   }
 
 
