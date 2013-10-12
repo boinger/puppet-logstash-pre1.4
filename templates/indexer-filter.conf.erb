@@ -4,6 +4,7 @@
 filter {
 
   # http://logstash.net/docs/1.1.13/filters/grok
+  # http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt
   # grok {
   #    type              => "syslog"
   #    match             => [ "wtf" ]
@@ -39,15 +40,41 @@ filter {
   # SYSLOGTIMESTAMP %{MONTH} +%{MONTHDAY} %{TIME}
   # SYSLOGPROG %{PROG:program}(?:\[%{POSINT:pid}\])?
 
+
+
+# date:
+# You used a deprecated setting
+# timestamp => [\"MMM  d HH:mm:ss\", \"MMM dd HH:mm:ss\"]
+# You should use
+# match => [ \"timestamp\", \"MMM  d HH:mm:ss\", \"MMM dd HH:mm:ss\" ]
+
+# date:
+# You used a deprecated setting timestamp8601 => [\"ISO8601\"]
+# You should use
+# match => [ \"timestamp8601\", \"ISO8601\" ]
+# match => [ "logdate", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
+
   grok {
-    match => ["@source_path", "/var/log/messages"]
-    patterns_dir => ["/etc/logstash/grok_patterns"]
-    pattern => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"
-    # add_field => [ "syslog_timestamp", "%{@syslog_timestamp}" ]
-    # add_field => [ "syslog_host", "%{@syslog_host}" ]
-    # add_field => [ "program", "%{@program}" ]
-    # add_tag => ["%{@program}"]
+    patterns_dir => ['/etc/logstash/grok_patterns']
+    match => [ '@message', "%{SYSLOGTIMESTAMP:syslog_ts} %{IPORHOST:syslog_host} %{PROG:program}(?:\[%{POSINT:pid}\])?: %{GREEDYDATA:short_message}"
+    add_tag => ['messages', 'program', "%{program}","%{@program}"]
   }
+
+  date {
+    tags => ['messages']
+    match => [ "syslog_ts", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
+  }
+
+  mutate {
+    tags => ['messages']
+    replace => [ "@message", "%{short_message}" ]
+  }
+
+
+  # add_field => [ "syslog_timestamp", "%{@ts}" ]
+  # add_field => [ "syslog_host", "%{@syslog_host}" ]
+  # add_field => [ "program", "%{@program}" ]
+
 
  # grok {
  #      type => "syslog"
