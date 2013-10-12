@@ -57,7 +57,7 @@ filter {
   grok {
     patterns_dir => ['/etc/logstash/grok_patterns']
     match => [ '@message', "%{SYSLOGTIMESTAMP:syslog_ts} %{IPORHOST:syslog_host} %{PROG:program}(?:\[%{POSINT:pid}\])?: %{GREEDYDATA:short_message}"
-    add_tag => ['messages', 'program', "%{program}","%{@program}"]
+    add_tag => ['messages']
   }
 
   date {
