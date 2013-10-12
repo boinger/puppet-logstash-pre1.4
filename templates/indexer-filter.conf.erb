@@ -62,7 +62,7 @@ filter {
 
   date {
     tags => ['messages']
-    match => { "syslog_ts" => [ "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ] }
+    match => [ "syslog_ts", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
   }
 
   mutate {
