@@ -1,3 +1,9 @@
   elasticsearch_http {
     host => "<%= scope.lookupvar('logstash::config::elasticsearch_http_host') %>"
   }
+
+  statsd {
+    tags => ['sshd']
+    increment => 'sshd.logstash_events'
+  }
+
