@@ -36,24 +36,6 @@ filter {
   # Oct 10 06:43:13 baker0 dhclient[774]:       DHCPREQUEST on eth0 to 169.254.1.0 port 67 (xid=0x5ecbdaec)
   # Oct  6 03:11:01 baker0 rsyslogd:            [origin software="rsyslogd" swVersion="5.8.10" x-pid="2854" x-info="http://www.rsyslog.com"] rsyslogd was HUPed
   # Oct  6 03:32:23 baker0 puppet-agent[13160]: (/Stage[main]/Daemontools::
-
-  # SYSLOGTIMESTAMP %{MONTH} +%{MONTHDAY} %{TIME}
-  # SYSLOGPROG %{PROG:program}(?:\[%{POSINT:pid}\])?
-
-
-
-# date:
-# You used a deprecated setting
-# timestamp => [\"MMM  d HH:mm:ss\", \"MMM dd HH:mm:ss\"]
-# You should use
-# match => [ \"timestamp\", \"MMM  d HH:mm:ss\", \"MMM dd HH:mm:ss\" ]
-
-# date:
-# You used a deprecated setting timestamp8601 => [\"ISO8601\"]
-# You should use
-# match => [ \"timestamp8601\", \"ISO8601\" ]
-# match => [ "logdate", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
-
   grok {
     patterns_dir => ['/etc/logstash/grok_patterns']
     match => [ '@message', "%{SYSLOGTIMESTAMP:syslog_ts} %{IPORHOST:syslog_host} %{PROG:program}(?:\[%{POSINT:pid}\])?: %{GREEDYDATA:short_message}" ]
@@ -71,18 +53,12 @@ filter {
     remove => [ 'syslog_ts', 'syslog_host', 'short_message' ]
   }
 
-
-  # add_field => [ "syslog_timestamp", "%{@ts}" ]
-  # add_field => [ "syslog_host", "%{@syslog_host}" ]
-  # add_field => [ "program", "%{@program}" ]
-
-
- # grok {
- #      type => "syslog"
- #      pattern => [ "<%{POSINT:syslog_pri}>%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" ]
- #      add_field => [ "received_at", "%{@timestamp}" ]
- #      add_field => [ "received_from", "%{@source_host}" ]
- #  }
+  multiline {
+    tags => ['messages', 'puppet-agent']
+    pattern => ".+"
+    stream_identity => "%{syslog_host}.%{program}.%{pid}"
+    what => "previous"
+  }
 
   # grok {
   #   type                => "syslog"
