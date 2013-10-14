@@ -42,6 +42,13 @@ filter {
     add_tag => ['messages', "%{program}"]
   }
 
+  multiline {
+    tags => ['messages', 'puppet-agent']
+    patterns_dir => ['/etc/logstash/grok_patterns']
+    pattern => "puppet-agent\[\d+\]"
+    what => "previous"
+  }
+
   date {
     tags => ['messages']
     match => [ "syslog_ts", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
@@ -53,12 +60,7 @@ filter {
     remove => [ 'syslog_ts', 'syslog_host', 'short_message' ]
   }
 
-  multiline {
-    tags => ['messages', 'puppet-agent']
-    pattern => ".+"
-    stream_identity => "%{syslog_host}.%{program}.%{pid}"
-    what => "previous"
-  }
+
 
   # grok {
   #   type                => "syslog"
