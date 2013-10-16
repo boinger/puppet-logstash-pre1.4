@@ -4,7 +4,10 @@
 
   statsd {
     tags => ['sshd']
-    increment => 'sshd.logstash_events'
+    host => 'logstash_host'
+    sender => 'logstash_sender'
+    namespace => 'logstash_namespace'
+    increment => 'logstash_increment'
   }
 
   # nagios_nsca {
