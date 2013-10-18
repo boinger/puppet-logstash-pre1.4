@@ -31,7 +31,7 @@ class logstash::package(
   $logstash_home     = '/opt/logstash',
   $logstash_version  = $logstash::config::logstash_version,
   $logstash_provider = 'http',
-  $logstash_baseurl  = 'https://logstash.objects.dreamhost.com/release',
+  $logstash_baseurl  = 'https://download.elasticsearch.org/logstash/logstash',
   $java_provider     = 'external',
   $java_package      = 'java-1.7.0-openjdk' )
 {
@@ -40,7 +40,7 @@ class logstash::package(
   # make sure the directory exists!
   Class['logstash::config'] -> Class['logstash::package']
 
-  $logstash_jar = sprintf("%s-%s-%s", "logstash", $logstash_version, "monolithic.jar")
+  $logstash_jar = sprintf("%s-%s-%s", "logstash", $logstash_version, "flatjar.jar")
   $jar = "$logstash_home/$logstash_jar"
 
   # put the logstash jar somewhere
