@@ -2,24 +2,3 @@
     host => "<%= scope.lookupvar('logstash::config::elasticsearch_http_host') %>"
   }
 
-
-  graphite {
-    tags => ['sshd']
-    host => 'graphite.icix.io'
-    metrics => ['logstash_test', '1']
-  }
-
-  # statsd {
-  #   tags => ['sshd']
-  #   sender => 'logstash_sender'
-  #   namespace => 'logstash_namespace'
-  #   increment => 'logstash_increment'
-  # }
-
-  # nagios_nsca {
-  #   tags => ['ingester_sftp']
-  #   host => nagios.icix.io
-  #   send_nsca_config => /etc/nagios/send_nsca.cfg
-  #   nagios_status => "0"
-  # }
-
