@@ -30,9 +30,9 @@
 class logstash::package(
   $logstash_home     = '/opt/logstash',
   $logstash_version  = $logstash::config::logstash_version,
-  $logstash_provider = 'http',
+  $logstash_provider = 'package',
   $logstash_baseurl  = 'https://download.elasticsearch.org/logstash/logstash',
-  $java_provider     = 'external',
+  $java_provider     = 'package',
   $java_package      = 'java-1.7.0-openjdk' )
 {
 
