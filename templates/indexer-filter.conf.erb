@@ -9,11 +9,10 @@ filter {
 
   # mind that we're now using our own patterns_dir which is managed by puppet
 
-  if [type] == "applog"
+  if [type] == "applog" {
     kv {
       field_split => "^"
       value_split => ":"
     }
   }
-
 }

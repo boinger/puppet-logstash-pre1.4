@@ -1,6 +1,4 @@
   tcp {
-    format     => "plain"
-    charset    => "UTF-8"
     port       => <%= scope.lookupvar('logstash::config::tcp_port')%>
     type       => "eventlog"
     ssl_enable => true
