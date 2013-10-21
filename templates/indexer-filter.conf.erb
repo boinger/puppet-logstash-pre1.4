@@ -1,86 +1,19 @@
 
-# mind that we're now using our own patterns_dir which is managed by puppet
-
 filter {
 
-  # http://logstash.net/docs/1.2.1/filters/grok
-  # http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt
-  # grok {
-  #    type              => "syslog"
-  #    match             => [ "wtf" ]
-  #    patterns_dir      => [ "/etc/logstash/grok_patterns" ]
-  #    pattern           => ??????
-  #    add_tag           => 'wtf'
-  #    add_field         => [ "wtf", "%{@message}" ]
-  #    break_on_match    => true
-  #    named_captures_only => true
-  # }
+  # grok:
+  # overview:        http://logstash.net/docs/1.2.1/filters/grok
+  # regex:           http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt
+  # grok test cases: https://github.com/logstash/logstash/blob/v1.2.1/spec/filters/grok.rb
+  # black box cases: https://github.com/Icix/ops-tests/blob/master/logstash_spec.rb
 
-  # grep notes?
-  # kv notes?
+  # mind that we're now using our own patterns_dir which is managed by puppet
 
-  grep {
-    match  => [ "@message", "dhclient" ]
-    negate => true
+  if [type] == "applog"
+    kv {
+      field_split => "^"
+      value_split => ":"
+    }
   }
 
-  kv {
-    type        => "applog"
-    field_split => "^"
-    value_split => ":"
-  }
-
-  # time            host   program              message
-  # Oct  9 20:53:39 baker0 kernel:              EXT4-fs (xvdg): mounted filesystem with ordered data mode. Opts:
-  # Oct 10 03:40:01 baker0 logrotate:           ALERT exited abnormally with [1]
-  # Oct 10 06:43:13 baker0 dhclient[774]:       DHCPREQUEST on eth0 to 169.254.1.0 port 67 (xid=0x5ecbdaec)
-  # Oct  6 03:11:01 baker0 rsyslogd:            [origin software="rsyslogd" swVersion="5.8.10" x-pid="2854" x-info="http://www.rsyslog.com"] rsyslogd was HUPed
-  # Oct  6 03:32:23 baker0 puppet-agent[13160]: (/Stage[main]/Daemontools::
-  grok {
-    patterns_dir => ['/etc/logstash/grok_patterns']
-    match => [ '@message', "%{SYSLOGTIMESTAMP:syslog_ts} %{IPORHOST:syslog_host} %{PROG:program}(?:\[%{POSINT:pid}\])?: %{GREEDYDATA:short_message}" ]
-    add_tag => ['messages', "%{program}"]
-  }
-
-  date {
-    tags => ['messages']
-    match => [ "syslog_ts", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-  }
-
-  mutate {
-    tags => ['messages']
-    replace => [ "@message", "%{short_message}" ]
-    remove => [ 'syslog_ts', 'syslog_host', 'short_message' ]
-  }
-
-
-  # grok secure log and label identification failuers
-
-
-  # all attempts to add a multiline filter have caused logstash to exit with no error message
-
-  # grok {
-  #   type                => "syslog"
-  #   patterns_dir        => [ "/etc/logstash/grok_patterns" ]
-  #   pattern             => "%{SYSLOGLINE}"
-  #   break_on_match      => true
-  #   #named_captures_only => true
-  # }
-
-  # grok {
-  #   type                => "apache-access"
-  #   patterns_dir        => [ "/etc/logstash/grok_patterns" ]
-  #   pattern             => "%{COMBINEDAPACHELOG}"
-  #   break_on_match      => true
-  #   named_captures_only => true
-  # }
-
-  # date {
-  #   type => "syslog"
-  #   match => [ "logdate", "MMM dd YYY HH:mm:ss", "MMM  d YYY HH:mm:ss", "ISO8601" ]
-  # }
-  # date {
-  #   type => "apache-access"
-  #   match => [ "logdate", "dd/MMM/yyyy:HH:mm:ss Z" ]
-  # }
 }
