@@ -51,7 +51,7 @@ filter {
 
       if "_grokparsefailure" in [tags] {
         grok {
-          match => ["message", "nvalid user %{USERNAME:username}(?: from %{IPORHOST:remote_host})?"]
+          match => ["message", "Invalid user %{USERNAME:username}(?: from %{IPORHOST:remote_host})?"]
           add_tag => ["invalid_user"]
           add_tag => ["auth_fail"]
         }
