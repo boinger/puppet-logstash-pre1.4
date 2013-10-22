@@ -9,14 +9,71 @@ filter {
 
   # mind that we're now using our own patterns_dir which is managed by puppet
 
-  grep {
-    match  => [ "@message", "dhclient" ]
-    negate => true
+  # XXX move this under /var/log/messages parsing
+
+  if [file] == "/var/log/secure" {
+    grok {
+      match => ["message", "%{SYSLOGTIMESTAMP:syslog_timestamp} %{IPORHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"]
+      overwrite => ["message"]
+      remove_field => ["syslog_host", "host"]
+    }
+
+    if [program] == "sudo" {
+      grep {
+        match => [ "message", "COMMAND=/usr/lib64/nagios/plugins/icix/check_svstat.pl" ]
+        negate => true
+      }
+    }
+
+    date {
+      match => ["syslog_timestamp",  "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "ISO8601"]
+      remove_field => ["syslog_timestamp"]
+    }
+
+    if [program] == "sshd" {
+      grok {
+        match => ["message", "Invalid user %{USERNAME:username} from %{IPORHOST:remote_host}"]
+        add_tag => ["invalid_user"]
+        add_tag => ["auth_fail"]
+      }
+
+      grok {
+        match => ["message", "pam_unix\(sshd:auth\): authentication failure;.* rhost=%{IPORHOST:remote_host}(?:\s+user=%{USERNAME:username})?"]
+        add_tag => ["auth_fail"]
+      }
+
+      grok {
+        match => ["message", "session opened for.*user %{USERNAME:username} from \[%{IPORHOST:remote_host}\]"]
+        add_tag => ["session_opened"]
+      }
+
+      mutate {
+        remove_tag => [ "_grokparsefailure" ]
+      }
+    }
   }
 
-  kv {
-    type => "applog"
-    field_split => "^"
-    value_split => ":"
+  if [file] == "/var/log/messages" {
+    grok {
+      match => ["message", "%{SYSLOGTIMESTAMP:syslog_timestamp} %{IPORHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"]
+      overwrite => ["message"]
+      remove_field => ["syslog_host", "host"]
+    }
+
+    if [program] == "dhclient" {
+      drop {}
+    }
+
+    date {
+      match => ["syslog_timestamp",  "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "ISO8601"]
+      remove_field => ["syslog_timestamp"]
+    }
+  }
+
+  if [type] == "applog" {
+    kv {
+      field_split => "^"
+      value_split => ":"
+    }
   }
 }
