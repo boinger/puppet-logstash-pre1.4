@@ -9,6 +9,11 @@ filter {
 
   # mind that we're now using our own patterns_dir which is managed by puppet
 
+  grep {
+    match  => [ "@message", "dhclient" ]
+    negate => true
+  }
+
   kv {
     type => "applog"
     field_split => "^"
