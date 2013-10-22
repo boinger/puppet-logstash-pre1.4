@@ -11,6 +11,12 @@ filter {
 
   # XXX move this under /var/log/messages parsing
 
+  if [type] == "lumberjack" {
+    mutate {
+      remove_field => ["offset"]
+    }
+  }
+
   if [file] == "/var/log/secure" {
     grok {
       match => ["message", "%{SYSLOGTIMESTAMP:syslog_timestamp} %{IPORHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"]
@@ -43,7 +49,7 @@ filter {
       }
 
       grok {
-        match => ["message", "session opened for.*user %{USERNAME:username} from \[%{IPORHOST:remote_host}\]"]
+        match => ["message", "pam_unix\(sshd:session\): session opened for user %{USERNAME:username}"]
         add_tag => ["session_opened"]
       }
 
