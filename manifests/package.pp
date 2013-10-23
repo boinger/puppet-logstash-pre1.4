@@ -31,7 +31,7 @@ class logstash::package(
   $logstash_home     = '/opt/logstash',
   $logstash_version  = $logstash::config::logstash_version,
   $logstash_provider = $logstash::config::logstash_provider,
-  $logstash_jartype  = $logstash::config::logstash_jartype,
+  $logstash_jar_type = $logstash::config::logstash_jartype,
   $logstash_baseurl  = $logstash::config::logstash_baseurl,
   $java_provider     = 'package',
   $java_package      = 'java-1.7.0-openjdk' )
@@ -41,7 +41,7 @@ class logstash::package(
   # make sure the directory exists!
   Class['logstash::config'] -> Class['logstash::package']
 
-  $logstash_jar = sprintf("%s-%s-%s.%s", "logstash", $logstash_version, $logstash_jartype, "jar")
+  $logstash_jar = sprintf("%s-%s-%s.%s", "logstash", $logstash_version, $logstash_jar_type, "jar")
   $jar = "$logstash_home/$logstash_jar"
 
   # put the logstash jar somewhere
