@@ -31,7 +31,7 @@ class logstash::package(
   $logstash_home     = '/opt/logstash',
   $logstash_version  = $logstash::config::logstash_version,
   $logstash_provider = $logstash::config::logstash_provider,
-  $logstash_jar_type = $logstash::config::logstash_jartype,
+  $logstash_jar_type = $logstash::config::logstash_jar_type,
   $logstash_baseurl  = $logstash::config::logstash_baseurl,
   $java_provider     = 'package',
   $java_package      = 'java-1.7.0-openjdk' )
