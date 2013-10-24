@@ -21,7 +21,7 @@ filter {
     grok {
       match => ["message", "%{SYSLOGTIMESTAMP:syslog_timestamp} %{IPORHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"]
       overwrite => ["message"]
-      remove_field => ["syslog_host", "host"]
+      remove_field => ["syslog_host"]
     }
 
     if [program] == "sudo" {
@@ -67,7 +67,7 @@ filter {
     grok {
       match => ["message", "%{SYSLOGTIMESTAMP:syslog_timestamp} %{IPORHOST:syslog_host} %{SYSLOGPROG}: %{GREEDYDATA:message}"]
       overwrite => ["message"]
-      remove_field => ["syslog_host", "host"]
+      remove_field => ["syslog_host"]
     }
 
     if [program] == "dhclient" {
