@@ -3,6 +3,6 @@
     statsd {
       port => 8126
       sender => ''
-      increment => "sshd.%{sshd_increment}.%{role}.%{env}.%{shn}"
+      count => {"sshd.%{sshd_increment}.%{role}.%{env}.%{shn}", 1}
     }
   }
