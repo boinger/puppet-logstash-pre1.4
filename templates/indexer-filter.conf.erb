@@ -62,6 +62,7 @@ filter {
       mutate {
         lowercase => ['sshd_increment']
         gsub => ['sshd_increment', '\;.*', '',
+                 'sshd_increment', '\d+\.\d+\.\d+\.\d+.*', '',
                  'sshd_increment', '(\s+[uU]ser)\s+.*', '\1',
                  'sshd_increment', '\W+', '_'
                 ]
