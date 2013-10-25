@@ -61,6 +61,7 @@ class logstash::indexer (
                                             'logstash/indexer-stanza-close.conf.erb',
                                             'logstash/indexer-filter.conf.erb',
                                             'logstash/indexer-output-header.conf.erb',
+                                            'logstash/indexer-output-statsd.conf.erb',
                                             'logstash/indexer-output-es_http.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb'
                                             ) }
