@@ -56,28 +56,15 @@ filter {
     }
 
     if [program] == "sshd" {
-      grok {
-        match => ["message", "pam_unix\(sshd:session\): session opened for user %{USERNAME:username}"]
-        add_tag => ["session_opened"]
-      }
-
-      if "_grokparsefailure" in [tags] {
-        grok {
-          match => ["message", "pam_unix\(sshd:auth\): authentication failure;.* rhost=%{IPORHOST:remote_host}(?:\s+user=%{USERNAME:username})?"]
-          add_tag => ["auth_fail"]
-        }
-      }
-
-      if "_grokparsefailure" in [tags] {
-        grok {
-          match => ["message", "Invalid user %{USERNAME:username}(?: from %{IPORHOST:remote_host})?"]
-          add_tag => ["invalid_user"]
-          add_tag => ["auth_fail"]
-        }
-      }
-
       mutate {
-        remove_tag => [ "_grokparsefailure" ]
+        add_field => {'sshd_increment' => "%{message}"}
+      }
+      mutate {
+        lowercase => ['sshd_increment']
+        gsub => ['sshd_increment', '\;.*', '',
+                 'sshd_increment', '(\s+[uU]ser)\s+.*', '\1',
+                 'sshd_increment', '\W+', '_'
+                ]
       }
     }
   }
