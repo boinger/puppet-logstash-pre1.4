@@ -1,13 +1,9 @@
 
 filter {
-
-  # grok:
   # overview:        http://logstash.net/docs/1.2.1/filters/grok
   # regex:           http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt
-  # grok test cases: https://github.com/logstash/logstash/blob/v1.2.1/spec/filters/grok.rb
+  # test cases:      https://github.com/logstash/logstash/blob/v1.2.1/spec/filters/grok.rb
   # black box cases: https://github.com/Icix/ops-tests/blob/master/logstash_spec.rb
-
-  # mind that we're now using our own patterns_dir which is managed by puppet
 
   if ! [shn] {
     if [host] =~ /[a-zA-Z]+/ {
@@ -64,6 +60,7 @@ filter {
         gsub => ['sshd_increment', '\;.*', '',
                  'sshd_increment', '\d+\.\d+\.\d+\.\d+.*', '',
                  'sshd_increment', '(\s+[uU]ser)\s+.*', '\1',
+                 'sshd_increment', '^\s*(\w+)\s+\"\/(\w+).*\".*', '\1_\2',
                  'sshd_increment', '\W+', '_',
                  'sshd_increment', '^_+|_+$', ''
                 ]
