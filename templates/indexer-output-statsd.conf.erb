@@ -2,7 +2,7 @@
   if [sshd_increment] {
     statsd {
       port => 8126
-      sender => ''
+      sender => 'count'
       increment => "sshd.%{sshd_increment}.%{role}.%{env}.%{shn}"
     }
   }
