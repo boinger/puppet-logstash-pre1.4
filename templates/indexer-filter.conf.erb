@@ -64,7 +64,8 @@ filter {
         gsub => ['sshd_increment', '\;.*', '',
                  'sshd_increment', '\d+\.\d+\.\d+\.\d+.*', '',
                  'sshd_increment', '(\s+[uU]ser)\s+.*', '\1',
-                 'sshd_increment', '\W+', '_'
+                 'sshd_increment', '\W+', '_',
+                 'sshd_increment', '^_+|_+$', ''
                 ]
       }
     }
