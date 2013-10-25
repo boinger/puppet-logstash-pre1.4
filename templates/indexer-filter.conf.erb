@@ -9,7 +9,26 @@ filter {
 
   # mind that we're now using our own patterns_dir which is managed by puppet
 
-  # XXX move this under /var/log/messages parsing
+  if ! [shn] {
+    if [host] =~ /[a-zA-Z]+/ {
+      mutate {
+        add_field => {"shn" => "%{host}"}
+      }
+      mutate {
+        gsub => ["shn", '\..*', '']
+      }
+    }
+  }
+
+  if ! [fqdn] {
+    if [host] =~ /\./ {
+      if [host] !~ /\d+\.\d+\.\d+\.\d+/ {
+        mutate {
+          add_field => {"fqdn" => "%{host}"}
+        }
+      }
+    }
+  }
 
   if [type] == "lumberjack" {
     mutate {
