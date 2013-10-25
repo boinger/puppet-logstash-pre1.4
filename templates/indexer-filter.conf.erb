@@ -61,6 +61,7 @@ filter {
                  'sshd_increment', '\d+\.\d+\.\d+\.\d+.*', '',
                  'sshd_increment', '(\s+[uU]ser)\s+.*', '\1',
                  'sshd_increment', '^\s*(\w+)\s+\"\/(\w+).*\".*', '\1_\2',
+                 'sshd_increment', '\s+from\s+.*$|\s+for\s+.*$|\s+by\s+.*$', '',
                  'sshd_increment', '\W+', '_',
                  'sshd_increment', '^_+|_+$', ''
                 ]
