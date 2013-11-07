@@ -111,6 +111,19 @@ filter {
     }
   }
 
+  if [source_path] == "/opt/processor/log/main/current" {
+    grok {
+      match => ["message", "\w+ (?<date_string>\w+ \d+ \d+ \d+\:\d+\:\d+) \w+\+\d+ \(\w+\) (?<application_name>\w+)\[(?<error_level>\w+)\]\: tid\: (?<tid>[a-zA-Z0-9\.\-\_]+) sid\: (?<sid>[a-zA-Z0-9\.\-\_]+) %{GREEDYDATA:message}"]
+      overwrite => ["message"]
+    }
+    if [date_string] {
+      date {
+        match => ["date_string",  "MMM dd yyyy HH:mm:ss"]
+        remove_field => ["date_string"]
+      }
+    }
+  }
+
   if [type] == "applog" {
     kv {
       field_split => "^"
