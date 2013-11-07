@@ -111,7 +111,7 @@ filter {
     }
   }
 
-  if [source_path] == "/opt/processor/log/main/current" {
+  if [file] == "/opt/processor/log/main/current" {
     grok {
       match => ["message", "\w+ (?<date_string>\w+ \d+ \d+ \d+\:\d+\:\d+) \w+\+\d+ \(\w+\) (?<application_name>\w+)\[(?<error_level>\w+)\]\: tid\: (?<tid>[a-zA-Z0-9\.\-\_]+) sid\: (?<sid>[a-zA-Z0-9\.\-\_]+) %{GREEDYDATA:message}"]
       overwrite => ["message"]
