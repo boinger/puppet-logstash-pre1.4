@@ -113,8 +113,7 @@ filter {
 
   if [file] == "/opt/processor/log/main/current" {
     grok {
-      match => ["message", "\w+ (?<date_string>\w+ \d+ \d+ \d+\:\d+\:\d+) \w+\+\d+ \(\w+\) (?<application_name>\w+)\[(?<error_level>\w+)\]\: tid\: (?<\
-tid>[a-zA-Z0-9\.\-\_]+) sid\: (?<sid>[a-zA-Z0-9\.\-\_]+) (?<message>.+?)(?:\s+(?<elapsed>\d+)ms\s*)?$"]
+      match => ["message", "\w+ (?<date_string>\w+ \d+ \d+ \d+\:\d+\:\d+) \w+\+\d+ \(\w+\) (?<application_name>\w+)\[(?<error_level>\w+)\]\: tid\: (?<tid>[a-zA-Z0-9\.\-\_]+) sid\: (?<sid>[a-zA-Z0-9\.\-\_]+) (?<message>.+?)(?:\s+(?<elapsed>\d+)ms\s*)?$"]
       overwrite => ["message"]
     }
     if [date_string] {
