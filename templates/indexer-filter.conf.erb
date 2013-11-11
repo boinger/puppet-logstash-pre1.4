@@ -135,6 +135,15 @@ filter {
         overwrite => ["message"]
       }
 
+    } else if [message] =~ /^already processed/ {
+      grok {
+        match => ["message", "^already processed (?<tid>[a-zA-Z0-9\.\-\_]+)\.json (?<tmp_message>.*)"]
+      }
+      mutate {
+        replace => ["message", "already processed tid.json %{tmp_message}"]
+        remove_field => ["tmp_message"]
+      }
+
     } else if [message] =~ /^OPTIONS |^GET |^HEAD |^POST |^PUT |^DELETE |^TRACE |^CONNECT / {
       grok {
         match => ["message", "%{WORD:verb} %{URIPATHPARAM:request} HTTP/%{NUMBER:httpversion} %{NUMBER:response} \"(?<agent>[^\"]+)\""]
