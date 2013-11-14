@@ -5,6 +5,10 @@ filter {
   # test cases:      https://github.com/logstash/logstash/blob/v1.2.1/spec/filters/grok.rb
   # black box cases: https://github.com/Icix/ops-tests/blob/master/logstash_spec.rb
 
+  mutate {
+    add_field => {"logstash_server" => "<%= @hostname %>"}
+  }
+
   if ! [shn] {
     if [host] =~ /[a-zA-Z]+/ {
       mutate {
