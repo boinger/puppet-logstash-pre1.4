@@ -90,30 +90,30 @@ filter {
     }
   }
 
-  if [file] == "/opt/watcher/log/main/current" {
-    xml {
-      source => "message"
-      target => "data"
-    }
-    if [data] {
-      if [data][milliseconds] {
-        date {
-          match => ["[data][milliseconds]", "UNIX_MS" ]
-        }
-        mutate {
-          remove_field => ["[data][milliseconds]", "[data][date]"]
-        }
-      }
-      if [data][message] {
-        mutate {
-          replace => [ "message", "%{[data][message]}" ]
-        }
-        mutate {
-          remove_field => ["[data][message]"]
-        }
-      }
-    }
-  }
+  # if [file] == "/opt/watcher/log/main/current" {
+  #   xml {
+  #     source => "message"
+  #     target => "data"
+  #   }
+  #   if [data] {
+  #     if [data][milliseconds] {
+  #       date {
+  #         match => ["[data][milliseconds]", "UNIX_MS" ]
+  #       }
+  #       mutate {
+  #         remove_field => ["[data][milliseconds]", "[data][date]"]
+  #       }
+  #     }
+  #     if [data][message] {
+  #       mutate {
+  #         replace => [ "message", "%{[data][message]}" ]
+  #       }
+  #       mutate {
+  #         remove_field => ["[data][message]"]
+  #       }
+  #     }
+  #   }
+  # }
 
   if [file] in ["/opt/ingester/log/main/current", "/opt/processor/log/main/current", "/opt/documents/log/main/current"] {
     grok {
