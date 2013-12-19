@@ -115,7 +115,65 @@ filter {
   #   }
   # }
 
-  if [file] in ["/opt/ingester/log/main/current", "/opt/processor/log/main/current", "/opt/documents/log/main/current"] {
+  if [file] in ["/opt/documents/log/main/current", "wtf logstash syntax"] {
+    grok {
+      match => ["message", "^(?<date_string>\d+-\d+-\d+ \d+:\d+:\d+\.\d+ \w+[\+\-]\d+) - (?<error_level>\w+): (?<message>.*)$"]
+      overwrite => ["message"]
+    }
+
+    if [date_string] {
+      date {
+        match => ["date_string",  "yyyy-MM-dd HH:mm:ss.SSS 'GMT'Z"]
+        remove_field => ["date_string"]
+      }
+    }
+
+    if [message] =~ /^tid\: / {
+      grok {
+        match => ["message", "^tid\: (?<tid>[a-zA-Z0-9\.\-\_]+) sid\: (?<sid>[a-zA-Z0-9\.\-\_]+) (?<message>.+?)(?:\s+(?<elapsed>\d+)ms\s*)?$"]
+        overwrite => ["message"]
+      }
+
+    } else if [message] =~ /^[0-9a-f]{55,75}\.\d{8,18} / {
+      grok {
+        match => ["message", "^(?<tid>[0-9a-f]{55,75}\.\d{8,18}) (?<message>.*)$"]
+        overwrite => ["message"]
+      }
+
+    } else if [message] =~ /^already processed/ {
+      grok {
+        match => ["message", "^already processed (?<tid>[a-zA-Z0-9\.\-\_]+)\.json (?<tmp_message>.*)"]
+      }
+      mutate {
+        replace => ["message", "already processed tid.json %{tmp_message}"]
+        remove_field => ["tmp_message"]
+      }
+
+    } else if [message] =~ /^OPTIONS |^GET |^HEAD |^POST |^PUT |^DELETE |^TRACE |^CONNECT / {
+      grok {
+        match => ["message", "%{WORD:verb} %{URIPATHPARAM:request} HTTP/%{NUMBER:httpversion} %{NUMBER:response} \"(?<agent>[^\"]+)\""]
+      }
+      if [verb] and [request] {
+        mutate {
+          replace => ["message", "%{verb} %{request}"]
+        }
+      }
+    } else if [message] =~ /^gc info \{/ {
+      grok {
+        match => ["message", "^(?<message>gc info) (?<gc_json>.*)$"]
+        overwrite => ["message"]
+      }
+      if [gc_json] {
+        json {
+          source => "gc_json"
+          target => "gc_info"
+          remove_field => "gc_json"
+        }
+      }
+    }
+  }
+
+  if [file] in ["/opt/ingester/log/main/current", "/opt/processor/log/main/current"] {
     grok {
       match => ["message", "\w+ (?<date_string>\w+ \d+ \d+ \d+\:\d+\:\d+ \w+[\+\-]+\d+) \(\w+\) (?<application_name>\w+)(?:\[(?<error_level>\w+)\])?\: (?<message>.*)$"]
       overwrite => ["message"]
