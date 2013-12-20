@@ -115,7 +115,7 @@ filter {
   #   }
   # }
 
-  if [file] in ["/opt/documents/log/main/current", "wtf logstash syntax"] {
+  if [file] in ["/opt/documents/log/main/current", "/opt/processor/log/main/current"] {
     grok {
       match => ["message", "^(?<date_string>\d+-\d+-\d+ \d+:\d+:\d+\.\d+ \w+[\+\-]\d+) - (?<error_level>\w+): (?<message>.*)$"]
       overwrite => ["message"]
@@ -173,7 +173,7 @@ filter {
     }
   }
 
-  if [file] in ["/opt/ingester/log/main/current", "/opt/processor/log/main/current"] {
+  if [file] in ["/opt/ingester/log/main/current", "wtf logstash syntax"] {
     grok {
       match => ["message", "\w+ (?<date_string>\w+ \d+ \d+ \d+\:\d+\:\d+ \w+[\+\-]+\d+) \(\w+\) (?<application_name>\w+)(?:\[(?<error_level>\w+)\])?\: (?<message>.*)$"]
       overwrite => ["message"]
