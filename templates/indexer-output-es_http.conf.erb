@@ -1,3 +1,11 @@
+
+  if [type] == "applog" and [env] == "production" {
+    elasticsearch_http {
+      host => "<%= scope.lookupvar('logstash::config::elasticsearch_http_host') %>"
+      index => "applog-%{+YYYY.MM.dd}"
+    }
+  }
+
   elasticsearch_http {
     host => "<%= scope.lookupvar('logstash::config::elasticsearch_http_host') %>"
   }
