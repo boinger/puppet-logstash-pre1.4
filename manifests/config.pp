@@ -26,7 +26,7 @@ class logstash::config(
   $logstash_jar_provider   = 'package',
   $logstash_baseurl        = 'https://download.elasticsearch.org/logstash/logstash',
   $logstash_jar_type       = 'flatjar',
-  $logstash_version        = '1.2.1',
+  $logstash_version        = '1.3.3',
   $logstash_verbose        = 'yes',
   $logstash_user           = 'logstash',
   $logstash_group          = 'logstash',
