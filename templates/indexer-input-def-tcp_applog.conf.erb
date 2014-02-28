@@ -1,9 +1,10 @@
   tcp {
-    port       => 9998
-    type       => "applog"
-    ssl_enable => true
-    ssl_cacert => "/etc/ssl/certs/ca.crt"
-    ssl_cert   => "/etc/ssl/certs/logstash.crt"
-    ssl_key    => "/etc/ssl/certs/logstash.key"
-    tags       => [ "tcp" ]
+    port         => 9998
+    type         => "applog"
+    ssl_enable   => true
+    ssl_cacert   => "/etc/ssl/certs/ca.crt"
+    ssl_cert     => "/etc/ssl/certs/logstash.crt"
+    ssl_key      => "/etc/ssl/certs/logstash.key"
+    tags         => [ "tcp" ]
+    data_timeout => 600
   }

@@ -1,9 +1,10 @@
   tcp {
-    port       => <%= scope.lookupvar('logstash::config::tcp_port')%>
-    type       => "eventlog"
-    ssl_enable => true
-    ssl_cacert => "/etc/ssl/certs/ca.crt"
-    ssl_cert   => "/etc/ssl/certs/logstash.crt"
-    ssl_key    => "/etc/ssl/certs/logstash.key"
-    tags       => [ "windows" ]
+    port         => <%= scope.lookupvar('logstash::config::tcp_port')%>
+    type         => "eventlog"
+    ssl_enable   => true
+    ssl_cacert   => "/etc/ssl/certs/ca.crt"
+    ssl_cert     => "/etc/ssl/certs/logstash.crt"
+    ssl_key      => "/etc/ssl/certs/logstash.key"
+    tags         => [ "windows" ]
+    data_timeout => 600
   }
