@@ -88,8 +88,8 @@ class logstash::indexer (
     servicejar     => $logstash::package::jar,
     serviceargs    => " agent --filterworkers 4 -f ${logstash::config::logstash_etc}/indexer.conf -l ${logstash::config::logstash_log}/indexer.log",
     java_home      => $logstash::config::java_home,
-    java_mem_min   => '4g',
-    java_mem_max   => '4g',
+    java_mem_min   => '3g',
+    java_mem_max   => '3g',
     keyword        => 'logstash/indexer';
   }
 
