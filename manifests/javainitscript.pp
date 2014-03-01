@@ -11,7 +11,7 @@ define logstash::javainitscript (
   $keyword,
   $java_home = '/usr/lib/jvm/jre-1.7.0-openjdk.x86_64',
   $java_mem_min = '1g',
-  $java_mem_max = '2g',
+  $java_mem_max = '4g',
 ) {
 
   file { "/etc/init.d/${servicename}":
