@@ -52,6 +52,17 @@ class logstash::indexer (
                                             'logstash/indexer-output-es.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb'
                                             ) }
+    /^webapp$/:   { $indexer_conf_content = template(
+                                            'logstash/indexer-input-header.conf.erb',
+                                            'logstash/indexer-input-def-tcp_applog.conf.erb',
+                                            'logstash/indexer-input-def-udp_applog.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb',
+                                            'logstash/indexer-filter.conf.erb',
+                                            'logstash/indexer-output-header.conf.erb',
+                                            'logstash/indexer-output-statsd.conf.erb',
+                                            'logstash/indexer-output-es_http.conf.erb',
+                                            'logstash/indexer-stanza-close.conf.erb'
+                                            ) }
     default:   { $indexer_conf_content = template(
                                             'logstash/indexer-input-header.conf.erb',
                                             'logstash/indexer-input-def-lumberjack.conf.erb',
