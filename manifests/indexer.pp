@@ -57,7 +57,7 @@ class logstash::indexer (
                                             'logstash/indexer-input-def-tcp_applog.conf.erb',
                                             'logstash/indexer-input-def-udp_applog.conf.erb',
                                             'logstash/indexer-stanza-close.conf.erb',
-                                            'logstash/indexer-filter.conf.erb',
+                                            'logstash/indexer-webapp-filter.conf.erb',
                                             'logstash/indexer-output-header.conf.erb',
                                             'logstash/indexer-output-statsd.conf.erb',
                                             'logstash/indexer-output-es_http.conf.erb',

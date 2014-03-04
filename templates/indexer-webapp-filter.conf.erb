@@ -1,0 +1,39 @@
+
+filter {
+  # overview:        http://logstash.net/docs/1.2.1/filters/grok
+  # regex:           http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt
+  # test cases:      https://github.com/logstash/logstash/blob/v1.2.1/spec/filters/grok.rb
+  # black box cases: https://github.com/Icix/ops-tests/blob/master/logstash_spec.rb
+
+  mutate {
+    add_field => {"logstash_server" => "<%= @hostname %>"}
+  }
+
+  if ! [shn] {
+    if [host] =~ /[a-zA-Z]+/ {
+      mutate {
+        add_field => {"shn" => "%{host}"}
+      }
+      mutate {
+        gsub => ["shn", '\..*', '']
+      }
+    }
+  }
+
+  if ! [fqdn] {
+    if [host] =~ /\./ {
+      if [host] !~ /\d+\.\d+\.\d+\.\d+/ {
+        mutate {
+          add_field => {"fqdn" => "%{host}"}
+        }
+      }
+    }
+  }
+
+  if [type] == "applog" {
+    kv {
+      field_split => "^"
+      value_split => ":"
+    }
+  }
+}
