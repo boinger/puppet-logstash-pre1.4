@@ -14,6 +14,13 @@ filter {
       remove_field => [ "SourceModuleType", "EventReceivedTime", "Keywords", "ProviderGuid", "OpcodeValue", "Opcode" ]
     }
 
+    if [Message] {
+      mutate {
+        add_field => { "message" => "%{Message}"}
+        remove_field => [ "Message" ]
+      }
+    }
+
     if [Hostname] {
       mutate {
         add_field => { "shn" => "%{Hostname}"}
