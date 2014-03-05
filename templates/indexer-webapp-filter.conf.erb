@@ -11,7 +11,11 @@ filter {
 
   if [type] == "nxlog" {
     mutate {
-      remove_field => [ "SourceModuleType", "EventReceivedTime", "Keywords", "ProviderGuid", "OpcodeValue", "Opcode", "TargetLogonId", "SeverityValue", "Task", "ThreadID", "AccountType", "RecordNumber"  ]
+      add_field => { "NXLogModuleName" => "%{SourceModuleName}" }
+    }
+
+    mutate {
+      remove_field => [ "SourceModuleName", "SourceModuleType", "EventReceivedTime", "Keywords", "ProviderGuid", "OpcodeValue", "Opcode", "TargetLogonId", "SeverityValue", "Task", "ThreadID", "AccountType", "RecordNumber" ]
     }
 
     if [Message] {
@@ -32,7 +36,7 @@ filter {
       }
     }
 
-    if [SourceModuleName] == "windowseventlog" {
+    if [NXLogModuleName] == "windowseventlog" {
       if [EventTime] {
         date {
           timezone => "America/Chicago"
