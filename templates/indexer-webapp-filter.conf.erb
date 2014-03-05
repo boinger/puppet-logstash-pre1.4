@@ -11,13 +11,17 @@ filter {
 
   if [type] == "nxlog" {
     mutate {
-      remove_field => [ "SourceModuleType", "EventReceivedTime" ]
+      remove_field => [ "SourceModuleType", "EventReceivedTime", "Keywords", "ProviderGuid", "OpcodeValue", "Opcode" ]
     }
 
     if [Hostname] {
       mutate {
-        replace => [ "host", "%{Hostname}" ]
+        add_field => { "shn" => "%{Hostname}"}
+        add_field => { "fqdn" => "%{Hostname}" }
         remove_field => [ "Hostname" ]
+      }
+      mutate {
+        gsub => ["shn", '\..*', '']
       }
     }
 
@@ -45,9 +49,8 @@ filter {
     }
   }
 
-
+  # replace host with the more specific "fully qualified domain name" and "short host name"
   if [host] {
-
     if ! [shn] {
       if [host] =~ /[a-zA-Z]+/ {
         mutate {
@@ -67,6 +70,10 @@ filter {
           }
         }
       }
+    }
+
+    mutate {
+      remove_field => [ "host" ]
     }
   }
 }
