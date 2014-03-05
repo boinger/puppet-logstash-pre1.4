@@ -14,17 +14,27 @@ filter {
       remove_field => [ "SourceModuleType", "EventReceivedTime" ]
     }
 
-    if [EventTime] {
-      date {
-        match => ["EventTime",  "YYYY-MM-dd HH:mm:ss", "ISO8601"]
-        remove_field => ["EventTime"]
-      }
-    }
-
     if [Hostname] {
       mutate {
         replace => [ "host", "%{Hostname}" ]
         remove_field => [ "Hostname" ]
+      }
+    }
+
+    if [SourceModuleName] == "windowseventlog" {
+      if [EventTime] {
+        date {
+          timezone => "America/Chicago"
+          match => ["EventTime",  "YYYY-MM-dd HH:mm:ss", "ISO8601"]
+          remove_field => ["EventTime"]
+        }
+      }
+    } else {
+      if [EventTime] {
+        date {
+          match => ["EventTime",  "YYYY-MM-dd HH:mm:ss", "ISO8601"]
+          remove_field => ["EventTime"]
+        }
       }
     }
 
