@@ -12,8 +12,11 @@ filter {
   if [type] == "nxlog" {
     if [SourceModuleName] == "windowseventlog" {
       mutate {
-        remove_field => [ "SourceModuleType", "SourceModuleName", "SeverityValue" ]
+        add_field => [ "foundwindowseventlog", "foundwindowseventlog" ]
       }
+      # mutate {
+      #   remove_field => [ "SourceModuleType", "SourceModuleName", "SeverityValue" ]
+      # }
 
       if [EventTime] {
         date {
@@ -29,7 +32,9 @@ filter {
         }
       }
     } else if [SourceModuleName] =~ /^iis/ {
-      # XXX parse iis logs!
+      mutate {
+        add_field => [ "foundiis", "foundiis" ]
+      }
     }
   } else if [type] == "applog" {
     kv {
