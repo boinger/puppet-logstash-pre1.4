@@ -10,10 +10,8 @@ filter {
   }
 
   if [type] == "nxlog" {
-    if [EventReceivedTime] {
-      mutate {
-        remove_field => [ "EventReceivedTime" ]
-      }
+    mutate {
+      remove_field => [ "EventReceivedTime" ]
     }
 
     if [SourceModuleName] == "windowseventlog" {
