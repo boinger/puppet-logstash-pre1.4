@@ -9,31 +9,57 @@ filter {
     add_field => {"logstash_server" => "<%= @hostname %>"}
   }
 
-  if ! [shn] {
-    if [host] =~ /[a-zA-Z]+/ {
+  if [type] == "nxlog" {
+    if [SourceModuleName] == "windowseventlog" {
       mutate {
-        add_field => {"shn" => "%{host}"}
+        remove_field => [ "SourceModuleType", "SourceModuleName", "SeverityValue" ]
       }
-      mutate {
-        gsub => ["shn", '\..*', '']
-      }
-    }
-  }
 
-  if ! [fqdn] {
-    if [host] =~ /\./ {
-      if [host] !~ /\d+\.\d+\.\d+\.\d+/ {
-        mutate {
-          add_field => {"fqdn" => "%{host}"}
+      if [EventTime] {
+        date {
+          match => ["EventTime",  "YYYY-MM-dd HH:mm:ss", "ISO8601"]
+          # remove_field => ["EventTime"]
         }
       }
-    }
-  }
 
-  if [type] == "applog" {
+      if [Hostname] {
+        mutate {
+          replace => [ "host", "%{Hostname}" ]
+          # remove_field => [ "Hostname" ]
+        }
+      }
+    } else if [SourceModuleName] =~ /^iis/ {
+      # XXX parse iis logs!
+    }
+  } else if [type] == "applog" {
     kv {
       field_split => "^"
       value_split => ":"
+    }
+  }
+
+
+  if [host] {
+
+    if ! [shn] {
+      if [host] =~ /[a-zA-Z]+/ {
+        mutate {
+          add_field => {"shn" => "%{host}"}
+        }
+        mutate {
+          gsub => ["shn", '\..*', '']
+        }
+      }
+    }
+
+    if ! [fqdn] {
+      if [host] =~ /\./ {
+        if [host] !~ /\d+\.\d+\.\d+\.\d+/ {
+          mutate {
+            add_field => {"fqdn" => "%{host}"}
+          }
+        }
+      }
     }
   }
 }
