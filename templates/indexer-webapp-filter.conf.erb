@@ -11,7 +11,7 @@ filter {
 
   if [type] == "nxlog" {
     mutate {
-      add_field => { "NXLogModuleName" => "%{SourceModuleName}" }
+      add_field => { "nxlog_module" => "%{SourceModuleName}" }
     }
 
     mutate {
@@ -36,7 +36,7 @@ filter {
       }
     }
 
-    if [NXLogModuleName] == "windowseventlog" {
+    if [nxlog_module] == "windowseventlog" {
       if [EventTime] {
         date {
           timezone => "America/Chicago"
